@@ -1,4 +1,4 @@
-package com.company;
+package trees;
 
 public class Main {
 
