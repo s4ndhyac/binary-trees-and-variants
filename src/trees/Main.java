@@ -1,168 +1,105 @@
 package trees;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        int iterationSeq = 1;
-        int iteration = 2000;
-        int maxSize = 1<<12;
+        int dataPoints = 10;//Integer.parseInt(args[0]);
+        int intervalSize = 10000;//Integer.parseInt(args[1]);
+        int numTrials = 10;//Integer.parseInt(args[2]);
+        String dataStructure = "1";//args[3];
+        String randomOrSequential = "S";//args[4];
+        if(randomOrSequential.equals("R"))
+            System.out.println("Random: ");
+        else if(randomOrSequential.equals("S"))
+            System.out.println("Sequential: ");
 
-        int[] searchSeqCosts = new int[maxSize+1];
-        int[] insertSeqCosts = new int[maxSize+1];
-        int[] deleteSeqCosts = new int[maxSize+1];
-
-        double[] searchAvgCosts = new double[maxSize+1];
-        double[] insertAvgCosts = new double[maxSize+1];
-        double[] deleteAvgCosts = new double[maxSize+1];
-
-        HashSet<Integer> set = new HashSet<>(2*maxSize);
-        ArrayList<Integer> listRandom = new ArrayList<>(maxSize);
-        ArrayList<Integer> listSeq = new ArrayList<>(maxSize);
-
-        int tmp = 0;
-        while(tmp < maxSize) {
-            listSeq.add(tmp++);
-        }
+        double start, end, setAvg = 0, deleteAvg = 0, searchAvg = 0;
+        double[] setRT = new double[dataPoints];
+        double[] deleteRT = new double[dataPoints];
+        double[] searchRT = new double[dataPoints];
 
         Random random = new Random();
-        while(listRandom.size() < maxSize) {
-            tmp = random.nextInt(Integer.MAX_VALUE);
-            if(set.contains(tmp))
-                continue;
-            set.add(tmp);
-            listRandom.add(tmp);
-        }
+        ITree t;
 
-        searchSeqCosts[0] = 1;
-        insertSeqCosts[0] = 1;
-        deleteSeqCosts[0] = 1;
+        for (int i = 1; i < dataPoints; i++) {
+            setAvg = 0;
+            deleteAvg = 0;
+            searchAvg = 0;
+            int range = i * intervalSize;
+            for (int j = 0; j < numTrials; j++) {
+                switch (dataStructure)
+                {
+                    case "1":
+                        t = new BST();
+                        break;
+                    case "2":
+                        t = new Treap();
+                        break;
+                    case "3":
+                        t = new Splay();
+                        break;
+                    case "4":
+                        t = new AVL();
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Illegal function");
+                }
 
-        searchAvgCosts[0] = 1.0;
-        insertAvgCosts[0] = 1.0;
-        deleteAvgCosts[0] = 1.0;
+                List<Integer> list = new ArrayList<>(i*intervalSize);
+                if(randomOrSequential.equals("R"))
+                {
+                    // generate random keys
+                    for (int k = 0; k < range; k++) {
+                        list.add(random.nextInt(1000000));
+                    }
+                }
+                else if(randomOrSequential.equals("S"))
+                {
+                    //generate sequential keys
+                    for (int k = 0; k < range; k++) {
+                        list.add(k);
+                    }
+                }
 
+                start = System.currentTimeMillis();
+                for (int k = 0; k < range; k++) {
+                    Node root = t.insert(t.getRoot(), list.get(k));
+                    t.setRoot(root);
+                }
+                end = System.currentTimeMillis();
+                setAvg += (end - start);
 
+                Collections.shuffle(list);
+                start = System.currentTimeMillis();
+                for (int k = 0; k < range; k++) {
+                    t.search(t.getRoot(), list.get(k));
+                }
+                end = System.currentTimeMillis();
+                searchAvg += (end - start);
 
-        double start = 0, end = 0, seqInsertAvg = 0, seqSearchAvg = 0, seqDeleteAvg = 0;
-        // test sequential data set
-        for (int i = 0; i < iterationSeq; i++) {
-
-            BST t = new BST();
-
-            start = System.currentTimeMillis();
-            for (int j = 0; j < maxSize; j++) {
-                t.root = t.insert(t.root, listSeq.get(j));
+                Collections.shuffle(list);
+                start = System.currentTimeMillis();
+                for (int k = 0; k < range; k++) {
+                    Node root = t.delete(t.getRoot(), list.get(k));
+                    t.setRoot(root);
+                }
+                end = System.currentTimeMillis();
+                deleteAvg += (end - start);
             }
-            end = System.currentTimeMillis();
-            seqInsertAvg += (end - start);
 
-            start = System.currentTimeMillis();
-            for (int j = 0; j < maxSize; j++) {
-                t.root = t.search(t.root, listSeq.get(j));
-            }
-            end = System.currentTimeMillis();
-            seqSearchAvg += (end - start);
+            setRT[i] = setAvg / numTrials;
+            System.out.println("i = " + i + ", set: " + setRT[i]);
 
-            for (int j = maxSize-1; j > -1; j--) {
-                t.root = t.delete(t.root, listSeq.get(j));
-            }
-            end = System.currentTimeMillis();
-            seqDeleteAvg += (end - start);
+            searchRT[i] = searchAvg / numTrials;
+            System.out.println("i = " + i + ", search: " + searchRT[i]);
+
+            deleteRT[i] = deleteAvg / numTrials;
+            System.out.println("i = " + i + ", delete: " + deleteRT[i]);
+            System.out.println(" ");
+
         }
-
-        insertSeqCosts[i+1] /= (double)iterationSeq;
-        searchSeqCosts[i+1] /= (double)iterationSeq;
-        deleteSeqCosts[i+1] /= (double)iterationSeq;
-
-        // test random data set
-        for (int i = 0; i < iteration; i++) {
-            BST t = new BST();
-
-            Collections.shuffle(listRandom);
-            ArrayList<Integer> tmpList = new ArrayList<>(maxSize);
-            for (int j = 0; j < maxSize; j++) {
-                tmp = t.insertAndCount(listRandom.get(j));
-                tmpList.add(listRandom.get(j));
-                insertAvgCosts[j+1] += tmp;
-
-                tmp = (int)t.searchAndCount(tmpList.get(random.nextInt(tmpList.size())))[1];
-                searchAvgCosts[j+1] += tmp;
-            }
-
-            Collections.shuffle(listRandom);
-            for (int j = 0; j < maxSize; j++) {
-                tmp = t.deleteAndCount(listRandom.get(j));
-                deleteAvgCosts[t.size+1] += tmp;
-            }
-        }
-        for (int i = 0; i < maxSize; i++) {
-            searchAvgCosts[i+1] /= (double)iteration;
-            insertAvgCosts[i+1] /= (double)iteration;
-            deleteAvgCosts[i+1] /= (double)iteration;
-        }
-
-        StringBuffer s1 = new StringBuffer("searchSeqCosts = [");
-        StringBuffer s2 = new StringBuffer("insertSeqCosts = [");
-        StringBuffer s3 = new StringBuffer("deleteSeqCosts = [");
-        StringBuffer s4 = new StringBuffer("searchAvgCosts = [");
-        StringBuffer s5 = new StringBuffer("insertAvgCosts = [");
-        StringBuffer s6 = new StringBuffer("deleteAvgCosts = [");
-        String tmpS;
-
-        for (int i = 0; i < maxSize+1; i++) {
-            s1.append(searchSeqCosts[i]);
-            s1.append(",");
-            s2.append(insertSeqCosts[i]);
-            s2.append(",");
-            s3.append(deleteSeqCosts[i]);
-            s3.append(",");
-
-            tmpS = String.valueOf(searchAvgCosts[i]);
-            if(tmpS.length() > 4)
-                tmpS = tmpS.substring(0, 4);
-            s4.append(tmpS);
-            s4.append(",");
-
-            tmpS = String.valueOf(insertAvgCosts[i]);
-            if(tmpS.length() > 4)
-                tmpS = tmpS.substring(0, 4);
-            s5.append(tmpS);
-            s5.append(",");
-
-            tmpS = String.valueOf(deleteAvgCosts[i]);
-            if(tmpS.length() > 4)
-                tmpS = tmpS.substring(0, 4);
-            s6.append(tmpS);
-            s6.append(",");
-        }
-        s1.deleteCharAt(s1.length()-1);
-        s2.deleteCharAt(s2.length()-1);
-        s3.deleteCharAt(s3.length()-1);
-        s1.append("];");
-        s2.append("];");
-        s3.append("];");
-        s4.deleteCharAt(s4.length()-1);
-        s5.deleteCharAt(s5.length()-1);
-        s6.deleteCharAt(s6.length()-1);
-        s4.append("];");
-        s5.append("];");
-        s6.append("];");
-
-        System.out.println(s1);
-        System.out.println(s2);
-        System.out.println(s3);
-        System.out.println(" ");
-        System.out.println(s4);
-        System.out.println(s5);
-        System.out.println(s6);
-
-
-
     }
 }
