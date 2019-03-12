@@ -91,11 +91,29 @@ public class Splay implements ITree {
     @Override
     public boolean search(Node root, int key)
     {
-        root = splay(root, key);
-        if (root.val == key)
-            return true;
-        else
-            return false;
+        Node curr = root;
+        Node last;
+        if(root!=null)
+        {
+            last = curr;
+            while(curr!=null)
+            {
+                last = curr;
+                if(key < curr.val)
+                    curr = curr.left;
+                else if(key > curr.val)
+                    curr = curr.right;
+                else
+                    break;
+            }
+
+            if(curr!=null)
+                splay(curr, key);
+            else
+                splay(last, key);
+        }
+
+        return curr!=null;
     }
 
     @Override
