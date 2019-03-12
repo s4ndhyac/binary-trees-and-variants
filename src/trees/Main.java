@@ -6,11 +6,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        int dataPoints = 10;//Integer.parseInt(args[0]);
-        int intervalSize = 10000;//Integer.parseInt(args[1]);
-        int numTrials = 10;//Integer.parseInt(args[2]);
-        String dataStructure = "1";//args[3];
-        String randomOrSequential = "S";//args[4];
+        int dataPoints = Integer.parseInt(args[0]);
+        int intervalSize = Integer.parseInt(args[1]);
+        int numTrials = Integer.parseInt(args[2]);
+        String dataStructure = args[3];
+        String randomOrSequential = args[4];
         if(randomOrSequential.equals("R"))
             System.out.println("Random: ");
         else if(randomOrSequential.equals("S"))
