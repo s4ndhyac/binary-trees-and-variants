@@ -85,12 +85,12 @@ public class BST implements ITree {
 
         // if given key is less than the root node, recurse for left subtree
         if (key < root.val) {
-            return delete(root.left, key);
+            root.left = delete(root.left, key);
         }
 
         // if given key is more than the root node, recurse for right subtree
         else if (key > root.val) {
-            return delete(root.right, key);
+            root.right = delete(root.right, key);
         }
 
         // key found
@@ -98,7 +98,7 @@ public class BST implements ITree {
             // Case 1: node to be deleted has no children (it is a leaf node)
             if (root.left == null && root.right == null) {
                 // update root to null
-                return null;
+                root = null;
             }
 
             // Case 2: node to be deleted has two children
@@ -111,7 +111,7 @@ public class BST implements ITree {
 
                 // recursively delete the predecessor. Note that the
                 // predecessor will have at-most one child (left child)
-                delete(root.left, predecessor.val);
+                root.left = delete(root.left, predecessor.val);
             }
 
             // Case 3: node to be deleted has only one child
