@@ -1,13 +1,16 @@
 package trees;
 
 public interface ITree {
-    Node search(Node root, int key);
+
+    boolean search(Node root, int key);
 
     Node insert(Node root, int key);
 
     Node delete(Node root, int key);
 
-    void print();
+    Node getRoot();
 
-    void printElementsAtDepth();
+    void setRoot(Node root);
+
+    void print();
 }

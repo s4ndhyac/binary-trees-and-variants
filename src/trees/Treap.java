@@ -1,15 +1,34 @@
 package trees;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Treap implements ITree {
+
+    Node root;
+
+    Treap() {
+        this.root = null;
+    }
+
+    @Override
+    public Node getRoot() {
+        return this.root;
+    }
+
+    @Override
+    public void setRoot(Node root) {
+        this.root = root;
+    }
 
     /* Function to left rotate given Treap
 
-     r						 R
-     / \	 Left Rotate	 / \
-    L	R	 â€“------>		r	Y
-        / \					/ \
-     X	Y				 L	X
-    */
+         r						 R
+         / \	 Left Rotate	 / \
+        L	R	 â€“------>		r	Y
+            / \					/ \
+         X	Y				 L	X
+        */
     public Node rotateLeft(Node root)
     {
         Node R = root.right;
@@ -45,6 +64,7 @@ public class Treap implements ITree {
     }
 
     // Recursive function to insert a given key with a priority into Treap
+    @Override
     public Node insert(Node root, int data)
     {
         // base case
@@ -77,16 +97,17 @@ public class Treap implements ITree {
     }
 
     // Recursive function to search for an key in the given Treap
-    public Node search(Node root, int key)
+    @Override
+    public boolean search(Node root, int key)
     {
         // if key is not present in the key
         if (root == null) {
-            return null;
+            return false;
         }
 
         // if key is found
         if (root.val == key) {
-            return root;
+            return true;
         }
 
         // if given key is less than the root node, search in the left subtree
@@ -99,6 +120,7 @@ public class Treap implements ITree {
     }
 
     // Recursive function to delete an key from the given Treap
+    @Override
     public  Node delete(Node root, int key)
     {
         // base case: key not found in tree
@@ -164,14 +186,26 @@ public class Treap implements ITree {
     @Override
     public void print()
     {
+        Queue<Node> q = new LinkedList<>();
+        q.offer(this.root.left);
+        while(!q.isEmpty()){
+            int size = q.size();
+            for(int i = 0; i < size; i++){
+                Node cur = q.poll();
+                if(cur == null){
+                    System.out.print("\t\t");
+                } else {
+                    System.out.print("\t" + cur.val + "\t");
+                    q.offer(cur.left);
+                    q.offer(cur.right);
+                }
+            }
+            System.out.println();
+        }
+        return;
 
     }
 
-    @Override
-    public void printElementsAtDepth()
-    {
-
-    }
 
 
 }

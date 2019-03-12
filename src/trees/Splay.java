@@ -1,7 +1,26 @@
 package trees;
 
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Splay implements ITree {
+
+    Node root;
+
+    Splay() {
+        this.root = null;
+    }
+
+    @Override
+    public Node getRoot() {
+        return this.root;
+    }
+
+    @Override
+    public void setRoot(Node root) {
+        this.root = root;
+    }
 
     // right rotate
     private Node rotateRight(Node h) {
@@ -69,11 +88,17 @@ public class Splay implements ITree {
             return h;
     }
 
-    public Node search(Node root, int key)
+    @Override
+    public boolean search(Node root, int key)
     {
-        return splay(root, key);
+        root = splay(root, key);
+        if (root.val == key)
+            return true;
+        else
+            return false;
     }
 
+    @Override
     public  Node insert(Node root, int key)
     {
         // Simple case: If tree is empty
@@ -114,6 +139,7 @@ public class Splay implements ITree {
 
     }
 
+    @Override
     public Node delete(Node root, int key)
     {
         // empty tree
@@ -148,14 +174,32 @@ public class Splay implements ITree {
         return root;
     }
 
+    @Override
     public void print()
     {
+        Queue<Node> q = new LinkedList<>();
+        q.offer(this.root.left);
+        int depth = 0;
+        long eNum = 0;
+        while(!q.isEmpty()){
+            int size = q.size();
+            depth++;
+            for(int i = 0; i < size; i++){
+                Node cur = q.poll();
 
-    }
-
-    public void printElementsAtDepth()
-    {
-
+                if(cur == null){
+                    System.out.print("\t\t");
+                } else {
+                    eNum++;
+                    System.out.print("\t" + cur.val + "\t");
+                    q.offer(cur.left);
+                    q.offer(cur.right);
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("depth: " + depth + "\telements:" + eNum);
+        return;
     }
 
 

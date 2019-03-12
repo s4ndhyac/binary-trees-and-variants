@@ -1,6 +1,25 @@
 package trees;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class AVL implements ITree {
+
+    Node root;
+
+    AVL() {
+        this.root = null;
+    }
+
+    @Override
+    public Node getRoot() {
+        return this.root;
+    }
+
+    @Override
+    public void setRoot(Node root) {
+        this.root = root;
+    }
 
     // A utility function to get height of the tree
     private int height(Node N)
@@ -62,6 +81,7 @@ public class AVL implements ITree {
         return height(N.left) - height(N.right);
     }
 
+    @Override
     public Node insert(Node node, int key)
     {
         /* 1. Perform the normal BST rotation */
@@ -126,18 +146,29 @@ public class AVL implements ITree {
         return current;
     }
 
-    public Node search(Node root, int key)
+    @Override
+    public boolean search(Node root, int key)
     {
-        if(root==null)
-            return null;
-        else if(key < root.val)
+        // if key is not present in the key
+        if (root == null) {
+            return false;
+        }
+
+        // if key is found
+        if (root.val == key) {
+            return true;
+        }
+
+        // if given key is less than the root node, search in the left subtree
+        if (key < root.val) {
             return search(root.left, key);
-        else if(root.val < key)
-            return search(root.right, key);
-        else
-            return root;
+        }
+
+        // else search in the right subtree
+        return search(root.right, key);
     }
 
+    @Override
     public Node delete(Node root, int key)
     {
         // STEP 1: PERFORM STANDARD BST DELETE
@@ -230,13 +261,27 @@ public class AVL implements ITree {
         return root;
     }
 
+    @Override
     public void print()
     {
+        Queue<Node> q = new LinkedList<>();
+        q.offer(this.root);
+        while(!q.isEmpty()){
+            int size = q.size();
+            for(int i = 0; i < size; i++){
+                Node cur = q.poll();
+                if(cur == null){
+                    System.out.print("\tnull\t");
+                } else {
+                    System.out.print("\t" + cur.val + " b:" + cur.height + "\t");
+                    q.offer(cur.left);
+                    q.offer(cur.right);
+                }
+            }
+            System.out.println();
+        }
+        return;
 
     }
 
-    public void printElementsAtDepth()
-    {
-
-    }
 }

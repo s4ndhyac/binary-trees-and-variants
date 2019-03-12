@@ -1,17 +1,24 @@
 package trees;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class BST implements ITree {
 
-    // Function to perform inorder traversal of the BST
-    public void inorder(Node root)
-    {
-        if (root == null) {
-            return;
-        }
+    Node root;
 
-        inorder(root.left);
-        System.out.print(root.val + " ");
-        inorder(root.right);
+    BST() {
+        this.root = null;
+    }
+
+    @Override
+    public Node getRoot() {
+        return this.root;
+    }
+
+    @Override
+    public void setRoot(Node root) {
+        this.root = root;
     }
 
     // Helper function to find maximum value node in subtree rooted at ptr
@@ -24,19 +31,25 @@ public class BST implements ITree {
         return ptr;
     }
 
-
     @Override
-    public Node search(Node root, int key)
+    public boolean search(Node root, int key)
     {
-        // Base Cases: root is null or key is present at root
-        if (root==null || root.val==key)
-            return root;
+        // if key is not present in the key
+        if (root == null) {
+            return false;
+        }
 
-        // val is greater than root's key
-        if (root.val > key)
+        // if key is found
+        if (root.val == key) {
+            return true;
+        }
+
+        // if given key is less than the root node, search in the left subtree
+        if (key < root.val) {
             return search(root.left, key);
+        }
 
-        // val is less than root's key
+        // else search in the right subtree
         return search(root.right, key);
     }
 
@@ -114,12 +127,25 @@ public class BST implements ITree {
     @Override
     public void print() {
 
+        Queue<Node> q = new LinkedList<>();
+        q.offer(this.root);
+        while(!q.isEmpty()){
+            int size = q.size();
+            for(int i = 0; i < size; i++){
+                Node cur = q.poll();
+                if(cur == null){
+                    System.out.print("\t\t");
+                } else {
+                    System.out.print("\t" + cur.val + "\t");
+                    q.offer(cur.left);
+                    q.offer(cur.right);
+                }
+            }
+            System.out.println();
+        }
+        return;
+
     }
 
-    @Override
-    public void printElementsAtDepth()
-    {
-
-    }
 
 }
