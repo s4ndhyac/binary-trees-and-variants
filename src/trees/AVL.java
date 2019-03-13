@@ -101,7 +101,7 @@ public class AVL implements ITree {
 
         /* 3. Get the balance factor of this ancestor
         node to check whether this node became
-        Wunbalanced */
+        unbalanced */
         int balance = getBalance(node);
 
         // If this node becomes unbalanced, then
