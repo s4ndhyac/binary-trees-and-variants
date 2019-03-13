@@ -1,3 +1,4 @@
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -19,14 +20,6 @@ public class Treap implements ITree {
         this.root = root;
     }
 
-    /* Function to left rotate given Treap
-
-         r						 R
-         / \	 Left Rotate	 / \
-        L	R	 â€“------>		r	Y
-            / \					/ \
-         X	Y				 L	X
-        */
     public Node rotateLeft(Node root)
     {
         Node R = root.right;
@@ -40,14 +33,7 @@ public class Treap implements ITree {
         return R;
     }
 
-    /* Function to right rotate given Treap
 
-            r						L
-            / \	 Right Rotate	 / \
-         L	R	 â€“------->	 X	r
-         / \						 / \
-        X	Y						Y	R
-    */
     public Node rotateRight(Node root)
     {
         Node L = root.left;
