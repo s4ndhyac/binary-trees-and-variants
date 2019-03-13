@@ -1,5 +1,3 @@
-package trees;
-
 public interface ITree {
 
     boolean search(Node root, int key);
