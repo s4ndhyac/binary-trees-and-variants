@@ -40,12 +40,12 @@ public class BST implements ITree {
         }
 
         // if key is found
-        if (root.val == key) {
+        if (root.key == key) {
             return true;
         }
 
         // if given key is less than the root node, search in the left subtree
-        if (key < root.val) {
+        if (key < root.key) {
             return search(root.left, key);
         }
 
@@ -63,7 +63,7 @@ public class BST implements ITree {
         }
 
         // if given key is less than the root node, recurse for left subtree
-        if (key < root.val) {
+        if (key < root.key) {
             root.left = insert(root.left, key);
         }
 
@@ -84,12 +84,12 @@ public class BST implements ITree {
         }
 
         // if given key is less than the root node, recurse for left subtree
-        if (key < root.val) {
+        if (key < root.key) {
             root.left = delete(root.left, key);
         }
 
         // if given key is more than the root node, recurse for right subtree
-        else if (key > root.val) {
+        else if (key > root.key) {
             root.right = delete(root.right, key);
         }
 
@@ -107,11 +107,11 @@ public class BST implements ITree {
                 Node predecessor = maximumKey(root.left);
 
                 // Copy the value of predecessor to current node
-                root.val = predecessor.val;
+                root.key = predecessor.key;
 
                 // recursively delete the predecessor. Note that the
                 // predecessor will have at-most one child (left child)
-                root.left = delete(root.left, predecessor.val);
+                root.left = delete(root.left, predecessor.key);
             }
 
             // Case 3: node to be deleted has only one child
@@ -136,7 +136,7 @@ public class BST implements ITree {
                 if(cur == null){
                     System.out.print("\t\t");
                 } else {
-                    System.out.print("\t" + cur.val + "\t");
+                    System.out.print("\t" + cur.key + "\t");
                     q.offer(cur.left);
                     q.offer(cur.right);
                 }

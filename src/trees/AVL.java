@@ -88,9 +88,9 @@ public class AVL implements ITree {
         if (node == null)
             return (new Node(key));
 
-        if (key < node.val)
+        if (key < node.key)
             node.left = insert(node.left, key);
-        else if (key > node.val)
+        else if (key > node.key)
             node.right = insert(node.right, key);
         else // Equal keys not allowed
             return node;
@@ -106,22 +106,22 @@ public class AVL implements ITree {
 
         // If this node becomes unbalanced, then
         // there are 4 cases Left Left Case
-        if (balance > 1 && key < node.left.val)
+        if (balance > 1 && key < node.left.key)
             return rightRotate(node);
 
         // Right Right Case
-        if (balance < -1 && key > node.right.val)
+        if (balance < -1 && key > node.right.key)
             return leftRotate(node);
 
         // Left Right Case
-        if (balance > 1 && key > node.left.val)
+        if (balance > 1 && key > node.left.key)
         {
             node.left = leftRotate(node.left);
             return rightRotate(node);
         }
 
         // Right Left Case
-        if (balance < -1 && key < node.right.val)
+        if (balance < -1 && key < node.right.key)
         {
             node.right = rightRotate(node.right);
             return leftRotate(node);
@@ -155,12 +155,12 @@ public class AVL implements ITree {
         }
 
         // if key is found
-        if (root.val == key) {
+        if (root.key == key) {
             return true;
         }
 
         // if given key is less than the root node, search in the left subtree
-        if (key < root.val) {
+        if (key < root.key) {
             return search(root.left, key);
         }
 
@@ -177,12 +177,12 @@ public class AVL implements ITree {
 
         // If the key to be deleted is smaller than
         // the root's key, then it lies in left subtree
-        if (key < root.val)
+        if (key < root.key)
             root.left = delete(root.left, key);
 
             // If the key to be deleted is greater than the
             // root's key, then it lies in right subtree
-        else if (key > root.val)
+        else if (key > root.key)
             root.right = delete(root.right, key);
 
             // if key is same as root's key, then this is the node
@@ -217,10 +217,10 @@ public class AVL implements ITree {
                 Node temp = minValueNode(root.right);
 
                 // Copy the inorder successor's data to this node
-                root.val = temp.val;
+                root.key = temp.key;
 
                 // Delete the inorder successor
-                root.right = delete(root.right, temp.val);
+                root.right = delete(root.right, temp.key);
             }
         }
 
@@ -273,7 +273,7 @@ public class AVL implements ITree {
                 if(cur == null){
                     System.out.print("\tnull\t");
                 } else {
-                    System.out.print("\t" + cur.val + " b:" + cur.height + "\t");
+                    System.out.print("\t" + cur.key + " b:" + cur.height + "\t");
                     q.offer(cur.left);
                     q.offer(cur.right);
                 }

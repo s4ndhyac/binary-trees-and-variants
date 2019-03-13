@@ -41,17 +41,17 @@ public class Splay implements ITree {
     private Node splay(Node h, int key) {
         if (h == null) return null;
 
-        if (h.val > key) {
+        if (h.key > key) {
             // key not in tree, so we're done
             if (h.left == null) {
                 return h;
             }
 
-            if (h.left.val > key) {
+            if (h.left.key > key) {
                 h.left.left = splay(h.left.left, key);
                 h = rotateRight(h);
             }
-            else if (h.left.val < key) {
+            else if (h.left.key < key) {
                 h.left.right = splay(h.left.right, key);
                 if (h.left.right != null)
                     h.left = rotateLeft(h.left);
@@ -62,19 +62,19 @@ public class Splay implements ITree {
             else
                 return rotateRight(h);
         }
-        else if (h.val < key) {
+        else if (h.key < key) {
             // key not in tree, so we're done
             if (h.right == null) {
                 return h;
             }
 
 
-            if (h.right.val > key) {
+            if (h.right.key > key) {
                 h.right.left  = splay(h.right.left, key);
                 if (h.right.left != null)
                     h.right = rotateRight(h.right);
             }
-            else if (h.right.val < key) {
+            else if (h.right.key < key) {
                 h.right.right = splay(h.right.right, key);
                 h = rotateLeft(h);
             }
@@ -92,7 +92,7 @@ public class Splay implements ITree {
     public boolean search(Node root, int key)
     {
         this.root = splay(root, key);
-        if (this.root.val == key)
+        if (this.root.key == key)
             return true;
         else
             return false;
@@ -110,13 +110,13 @@ public class Splay implements ITree {
         root = splay(root, key);
 
         //If key is already present then return
-        if(root.val == key)
+        if(root.key == key)
             return root;
 
         // Insert new node at root
         // If root's key is greater, make root as right child
         // of newnode and copy the left child of root to newnode
-        if (root.val > key) {
+        if (root.key > key) {
             Node n = new Node(key);
             n.left = root.left;
             n.right = root;
@@ -127,7 +127,7 @@ public class Splay implements ITree {
         // Insert new node at root
         // If root's key is smaller, make root as left child
         // of newnode and copy the right child of root to newnode
-        else if (root.val < key) {
+        else if (root.key < key) {
             Node n = new Node(key);
             n.right = root.right;
             n.left = root;
@@ -150,7 +150,7 @@ public class Splay implements ITree {
         root = splay(root, key);
 
         // If key is not present, then return
-        if(root.val != key)
+        if(root.key != key)
             return root;
 
         // If key is present
@@ -191,7 +191,7 @@ public class Splay implements ITree {
                     System.out.print("\t\t");
                 } else {
                     eNum++;
-                    System.out.print("\t" + cur.val + "\t");
+                    System.out.print("\t" + cur.key + "\t");
                     q.offer(cur.left);
                     q.offer(cur.right);
                 }

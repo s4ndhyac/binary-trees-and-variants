@@ -74,7 +74,7 @@ public class Treap implements ITree {
 
         // if given data is less than the root node, insert in the left subtree
         // else insert in the right subtree
-        if (data < root.val)
+        if (data < root.key)
         {
             root.left = insert(root.left, data);
 
@@ -106,12 +106,12 @@ public class Treap implements ITree {
         }
 
         // if key is found
-        if (root.val == key) {
+        if (root.key == key) {
             return true;
         }
 
         // if given key is less than the root node, search in the left subtree
-        if (key < root.val) {
+        if (key < root.key) {
             return search(root.left, key);
         }
 
@@ -129,12 +129,12 @@ public class Treap implements ITree {
         }
 
         // if given key is less than the root node, recuse for left subtree
-        if (key < root.val) {
+        if (key < root.key) {
             root.left = delete(root.left, key);
         }
 
         // if given key is more than the root node, recuse for right subtree
-        else if (key > root.val) {
+        else if (key > root.key) {
             root.right = delete(root.right, key);
         }
 
@@ -195,7 +195,7 @@ public class Treap implements ITree {
                 if(cur == null){
                     System.out.print("\t\t");
                 } else {
-                    System.out.print("\t" + cur.val + "\t");
+                    System.out.print("\t" + cur.key + "\t");
                     q.offer(cur.left);
                     q.offer(cur.right);
                 }
